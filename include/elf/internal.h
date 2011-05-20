@@ -292,10 +292,13 @@ struct elf_segment_map
 
 /* .tbss is special.  It doesn't contribute memory space to normal
    segments and it doesn't take file space in normal segments.  */
+#define ELF_TBSS_SPECIAL(sec_hdr, segment)			\
+  (((sec_hdr)->sh_flags & SHF_TLS) != 0				\
+   && (sec_hdr)->sh_type == SHT_NOBITS				\
+   && (segment)->p_type != PT_TLS)
+
 #define ELF_SECTION_SIZE(sec_hdr, segment)			\
-   (((sec_hdr->sh_flags & SHF_TLS) == 0				\
-     || sec_hdr->sh_type != SHT_NOBITS				\
-     || segment->p_type == PT_TLS) ? sec_hdr->sh_size : 0)
+  (ELF_TBSS_SPECIAL(sec_hdr, segment) ? 0 : (sec_hdr)->sh_size)
 
 /* Decide if the given sec_hdr is in the given segment.  PT_TLS segment
    contains only SHF_TLS sections.  Only PT_LOAD, PT_GNU_RELRO and
