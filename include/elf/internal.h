@@ -316,7 +316,6 @@ struct elf_segment_map
    /* SHF_ALLOC sections must have VMAs within the segment.  Be		\
       careful about segments right at the end of memory.  */		\
    && ((sec_hdr->sh_flags & SHF_ALLOC) == 0				\
-       || ELF_SECTION_SIZE(sec_hdr,segment) == 0                        \
        || (sec_hdr->sh_addr >= segment->p_vaddr				\
 	   && (sec_hdr->sh_addr - segment->p_vaddr			\
 	       + ELF_SECTION_SIZE(sec_hdr, segment) <= segment->p_memsz))))
